@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1049034866836",
+    "project_id": "my-itinerary-11a23",
+    "storage_bucket": "my-itinerary-11a23.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1049034866836:android:aeb694ecf3a4f44beb3481",
+        "android_client_info": {
+          "package_name": "com.example.my_itinerary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1049034866836-31pqa4lb1jtun1kdva8o0hg1h20cfgjd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdhXW5VTSJbvjQ-YuiMA_XlP7HYQmuR5k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1049034866836-31pqa4lb1jtun1kdva8o0hg1h20cfgjd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1049034866836-vs24vm8pqkldmk9okskba2cv28vh50fo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.thancr.myitinerary"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
