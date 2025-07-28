@@ -8,7 +8,8 @@ Widget flightCard(BuildContext context, {required Flight flight}){
     children: [
       flightNumber(flight),
       flightLocations(context,flight),
-      flightDetails(context, flight)
+      flightDetails(context, flight),
+      
     ],
   );
   
