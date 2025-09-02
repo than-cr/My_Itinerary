@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:my_itinerary/models/flight.dart';
 import 'package:my_itinerary/screens/flight_details_screen.dart';
@@ -6,8 +5,9 @@ import 'package:my_itinerary/widgets/flight_overall_info.dart';
 
 class FlightCard extends StatelessWidget {
   final Flight flight;
-  const FlightCard({super.key, required this.flight});
+  final VoidCallback? onFlightCompleted;
 
+  const FlightCard({super.key, required this.flight, this.onFlightCompleted});
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +21,17 @@ class FlightCard extends StatelessWidget {
       child: Opacity(
         opacity: flight.isCompleted ? 0.6 : 1.0,
         child: GestureDetector(
-          onTap: () => {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => FlightDetailsScreen(flight: flight))),
+          onTap: () async {
+            final result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => FlightDetailsScreen(flight: flight),
+              ),
+            );
+            // If the flight was completed (result is true), trigger refresh
+            if (result == true && onFlightCompleted != null) {
+              onFlightCompleted!();
+            }
           },
           child: SizedBox(
             height: 150,
@@ -41,9 +50,29 @@ class FlightCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Expanded(child: flightOverallInfo(flight, isArrival: false, textColor: textColor, iconColor: iconColor)),
-                        Expanded(child: flightCode(flight, beanColor: beanColor, textColor: textColor)),
-                        Expanded(child: flightOverallInfo(flight, isArrival: true, textColor: textColor, iconColor: iconColor)),
+                        Expanded(
+                          child: flightOverallInfo(
+                            flight,
+                            isArrival: false,
+                            textColor: textColor,
+                            iconColor: iconColor,
+                          ),
+                        ),
+                        Expanded(
+                          child: flightCode(
+                            flight,
+                            beanColor: beanColor,
+                            textColor: textColor,
+                          ),
+                        ),
+                        Expanded(
+                          child: flightOverallInfo(
+                            flight,
+                            isArrival: true,
+                            textColor: textColor,
+                            iconColor: iconColor,
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -52,11 +81,7 @@ class FlightCard extends StatelessWidget {
             ),
           ),
         ),
-      )
+      ),
     );
   }
 }
-
-
-
-

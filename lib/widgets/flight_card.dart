@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:my_itinerary/models/flight.dart';
+import 'package:my_itinerary/services/flight_service.dart';
 import 'package:my_itinerary/widgets/flight_overall_info.dart';
 import 'package:my_itinerary/widgets/mini_card.dart';
 
-Widget flightCard(BuildContext context, {required Flight flight}){
+Widget flightCard(BuildContext context, {required Flight flight}) {
   return Column(
     children: [
       flightNumber(flight),
-      flightLocations(context,flight),
+      flightLocations(context, flight),
       flightDetails(context, flight),
-      
+      flightCompletedButton(context, flight),
     ],
   );
-  
 }
 
-Widget flightNumber(Flight flight){
+Widget flightNumber(Flight flight) {
   return SizedBox(
     width: double.infinity,
     height: 100,
@@ -44,15 +44,12 @@ Widget flightNumber(Flight flight){
                 ),
                 Text(
                   flight.airline,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
                   textAlign: TextAlign.center,
                 ),
-              ]
+              ],
             ),
-          ]
+          ],
         ),
       ),
     ),
@@ -66,11 +63,7 @@ Widget airplaneIcon(double size) {
       color: Colors.yellow,
       borderRadius: BorderRadius.circular(8.0),
     ),
-    child: Icon(
-      Icons.flight_takeoff,
-      size: size,
-      color: Colors.black,
-    ),
+    child: Icon(Icons.flight_takeoff, size: size, color: Colors.black),
   );
 }
 
@@ -92,7 +85,14 @@ Widget flightLocations(BuildContext context, Flight flight) {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                flightOverallInfo(flight, isArrival: false, textColor: Colors.black, iconColor: Colors.black, showIcon: false, showAirportName: true),
+                flightOverallInfo(
+                  flight,
+                  isArrival: false,
+                  textColor: Colors.black,
+                  iconColor: Colors.black,
+                  showIcon: false,
+                  showAirportName: true,
+                ),
                 Container(
                   color: Colors.grey,
                   width: deviceWidth * 0.1,
@@ -104,8 +104,15 @@ Widget flightLocations(BuildContext context, Flight flight) {
                   width: deviceWidth * 0.1,
                   height: 2,
                 ),
-                flightOverallInfo(flight, isArrival: true, textColor: Colors.black, iconColor: Colors.black, showIcon: false, showAirportName: true),
-              ]
+                flightOverallInfo(
+                  flight,
+                  isArrival: true,
+                  textColor: Colors.black,
+                  iconColor: Colors.black,
+                  showIcon: false,
+                  showAirportName: true,
+                ),
+              ],
             ),
             const SizedBox(height: 10),
             Container(
@@ -130,13 +137,13 @@ Widget flightLocations(BuildContext context, Flight flight) {
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.black,
-                        fontWeight: FontWeight.bold
+                        fontWeight: FontWeight.bold,
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -168,28 +175,28 @@ Widget flightDetails(BuildContext context, Flight flight) {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 miniCard(
-                  title: 'Reservation', 
-                  value: flight.confirmationCode, 
-                  icon: Icons.airplane_ticket, 
-                  width: width, 
-                  height: height, 
-                  iconSize: iconSize, 
-                  titleSize: titleSize, 
+                  title: 'Reservation',
+                  value: flight.confirmationCode,
+                  icon: Icons.airplane_ticket,
+                  width: width,
+                  height: height,
+                  iconSize: iconSize,
+                  titleSize: titleSize,
                   valueSize: valueSize,
                   backgroundColor: Colors.orange[100],
-                  iconColor: Colors.orange
+                  iconColor: Colors.orange,
                 ),
                 miniCard(
-                  title: 'Gate', 
-                  value: flight.gate, 
-                  icon: Icons.door_back_door, 
-                  width: width, 
-                  height: height, 
-                  iconSize: iconSize, 
-                  titleSize: titleSize, 
+                  title: 'Gate',
+                  value: flight.gate,
+                  icon: Icons.door_back_door,
+                  width: width,
+                  height: height,
+                  iconSize: iconSize,
+                  titleSize: titleSize,
                   valueSize: valueSize,
                   backgroundColor: Colors.green[100],
-                  iconColor: Colors.green
+                  iconColor: Colors.green,
                 ),
               ],
             ),
@@ -197,32 +204,96 @@ Widget flightDetails(BuildContext context, Flight flight) {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 miniCard(
-                  title: 'Terminal', 
-                  value: flight.terminal, 
-                  icon: Icons.local_airport, 
-                  width: width, 
-                  height: height, 
-                  iconSize: iconSize, 
-                  titleSize: titleSize, 
+                  title: 'Terminal',
+                  value: flight.terminal,
+                  icon: Icons.local_airport,
+                  width: width,
+                  height: height,
+                  iconSize: iconSize,
+                  titleSize: titleSize,
                   valueSize: valueSize,
                   backgroundColor: Colors.red[100],
-                  iconColor: Colors.red
+                  iconColor: Colors.red,
                 ),
                 miniCard(
-                  title: 'Seat', 
-                  value: flight.seatNumber, 
-                  icon: Icons.chair_rounded, 
-                  width: width, 
-                  height: height, 
-                  iconSize: iconSize, 
-                  titleSize: titleSize, 
+                  title: 'Seat',
+                  value: flight.seatNumber,
+                  icon: Icons.chair_rounded,
+                  width: width,
+                  height: height,
+                  iconSize: iconSize,
+                  titleSize: titleSize,
                   valueSize: valueSize,
                   backgroundColor: Colors.blue[100],
-                  iconColor: Colors.blue
+                  iconColor: Colors.blue,
                 ),
               ],
             ),
           ],
+        ),
+      ),
+    ),
+  );
+}
+
+Widget flightCompletedButton(BuildContext context, Flight flight) {
+  return SizedBox(
+    width: double.infinity,
+    height: 50,
+    child: Padding(
+      padding: EdgeInsetsGeometry.all(8.0),
+      child: ElevatedButton(
+        onPressed: flight.isCompleted == true
+            ? null
+            : () async {
+                try {
+                  // Show loading indicator
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Marking flight as completed...'),
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
+
+                  await FlightService().markFlightAsCompleted(flight.id!);
+
+                  // Show success message
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Flight marked as completed!'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                    // Pop with result to indicate the flight was completed
+                    Navigator.of(context).pop(true);
+                  }
+                } catch (e) {
+                  // Show error message
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Failed to mark flight as completed. Please try again.',
+                        ),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                }
+              },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: flight.isCompleted == true
+              ? Colors.grey
+              : Colors.yellow,
+          foregroundColor: Colors.black,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
+        child: Text(
+          flight.isCompleted == true ? 'Completed' : 'Mark as Completed',
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
     ),

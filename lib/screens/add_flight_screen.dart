@@ -155,18 +155,6 @@ class _AddFlightScreenState extends State<AddFlightScreen> {
       final departureDateTime = _combineDateAndTime(_departureDate, _departureTime);
       final arrivalDateTime = _combineDateAndTime(_arrivalDate, _arrivalTime);
 
-      // Debug: Print completely timezone-free date information
-      print('=== COMPLETELY TIMEZONE-FREE DATE DEBUG ===');
-      print('Device timezone: ${DateTime.now().timeZoneName}');
-      print('Device offset: ${DateTime.now().timeZoneOffset}');
-      print('Departure as entered: $departureDateTime');
-      print('Departure components: Year=${departureDateTime.year}, Month=${departureDateTime.month}, Day=${departureDateTime.day}, Hour=${departureDateTime.hour}, Minute=${departureDateTime.minute}');
-      print('How it will be stored: {year: ${departureDateTime.year}, month: ${departureDateTime.month}, day: ${departureDateTime.day}, hour: ${departureDateTime.hour}, minute: ${departureDateTime.minute}}');
-      print('Arrival as entered: $arrivalDateTime');
-      print('Arrival components: Year=${arrivalDateTime.year}, Month=${arrivalDateTime.month}, Day=${arrivalDateTime.day}, Hour=${arrivalDateTime.hour}, Minute=${arrivalDateTime.minute}');
-      print('How it will be stored: {year: ${arrivalDateTime.year}, month: ${arrivalDateTime.month}, day: ${arrivalDateTime.day}, hour: ${arrivalDateTime.hour}, minute: ${arrivalDateTime.minute}}');
-      print('============================================');
-
       // Validate that arrival is after departure
       if (!arrivalDateTime.isAfter(departureDateTime)) {
         throw Exception('Arrival time must be after departure time');

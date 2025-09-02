@@ -36,21 +36,23 @@ class Flight {
   });
 
   Flight.fromJson(Map<String, dynamic> json)
-      : id = json['id'] ?? '', // Assuming 'id' is included in the JSON or default to empty string
-        flightNumber = json['flightNumber'],
-        confirmationCode = json['confirmationCode'],
-        departureAirport = json['departureAirport'],
-        departureAirportName = json['departureAirportName'],
-        arrivalAirport = json['arrivalAirport'],
-        arrivalAirportName = json['arrivalAirportName'],
-        departureTime = _parseDateTime(json['departureTime']),
-        arrivalTime = _parseDateTime(json['arrivalTime']),
-        airline = json['airline'],
-        seatNumber = json['seatNumber'],
-        terminal = json['terminal'],
-        gate = json['gate'],
-        userId = json['userId'],
-        isCompleted = json['isCompleted'] ?? false;
+    : id =
+          json['id'] ??
+          '', // Assuming 'id' is included in the JSON or default to empty string
+      flightNumber = json['flightNumber'],
+      confirmationCode = json['confirmationCode'],
+      departureAirport = json['departureAirport'],
+      departureAirportName = json['departureAirportName'],
+      arrivalAirport = json['arrivalAirport'],
+      arrivalAirportName = json['arrivalAirportName'],
+      departureTime = _parseDateTime(json['departureTime']),
+      arrivalTime = _parseDateTime(json['arrivalTime']),
+      airline = json['airline'],
+      seatNumber = json['seatNumber'],
+      terminal = json['terminal'],
+      gate = json['gate'],
+      userId = json['userId'],
+      isCompleted = json['isCompleted'] ?? false;
 
   // Helper method to parse DateTime from different formats without timezone conversion
   static DateTime _parseDateTime(dynamic dateTime) {
@@ -68,24 +70,56 @@ class Flight {
     } else if (dateTime is Timestamp) {
       // Legacy Firestore Timestamp - extract components to avoid timezone conversion
       final dt = dateTime.toDate().toLocal();
-      return DateTime(dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second, dt.millisecond);
+      return DateTime(
+        dt.year,
+        dt.month,
+        dt.day,
+        dt.hour,
+        dt.minute,
+        dt.second,
+        dt.millisecond,
+      );
     } else if (dateTime is int) {
       // Legacy milliseconds - extract components to avoid timezone interpretation
       final dt = DateTime.fromMillisecondsSinceEpoch(dateTime).toLocal();
-      return DateTime(dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second, dt.millisecond);
+      return DateTime(
+        dt.year,
+        dt.month,
+        dt.day,
+        dt.hour,
+        dt.minute,
+        dt.second,
+        dt.millisecond,
+      );
     } else if (dateTime is String) {
       // ISO string - parse and extract components only
       try {
         final parsed = DateTime.parse(dateTime);
-        return DateTime(parsed.year, parsed.month, parsed.day, parsed.hour, parsed.minute, parsed.second, parsed.millisecond);
+        return DateTime(
+          parsed.year,
+          parsed.month,
+          parsed.day,
+          parsed.hour,
+          parsed.minute,
+          parsed.second,
+          parsed.millisecond,
+        );
       } catch (e) {
-        throw FormatException('Invalid date string format: $dateTime');
+        throw const FormatException('Invalid date format provided');
       }
     } else if (dateTime is DateTime) {
       // Already a DateTime - extract components to ensure no timezone data
-      return DateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute, dateTime.second, dateTime.millisecond);
+      return DateTime(
+        dateTime.year,
+        dateTime.month,
+        dateTime.day,
+        dateTime.hour,
+        dateTime.minute,
+        dateTime.second,
+        dateTime.millisecond,
+      );
     } else {
-      throw FormatException('Unknown dateTime format: ${dateTime.runtimeType}');
+      throw const FormatException('Unsupported date format');
     }
   }
 
@@ -123,12 +157,12 @@ class Flight {
       'userId': userId, // Include userId to associate flight with user
       'isCompleted': isCompleted,
     };
-    
+
     // Only include id if it's not null
     if (id != null) {
       data['id'] = id;
     }
-    
+
     return data;
   }
 }

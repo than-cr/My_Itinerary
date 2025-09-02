@@ -41,7 +41,8 @@ class _HomePageState extends State<HomePage> {
     } catch (e) {
       setState(() {
         _isLoading = false;
-        _errorMessage = 'Failed to load flights: $e';
+        _errorMessage =
+            'Unable to load flights. Please check your connection and try again.';
       });
     }
   }
@@ -83,7 +84,9 @@ class _HomePageState extends State<HomePage> {
                 case 'add_flight':
                   final result = await Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const AddFlightScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => const AddFlightScreen(),
+                    ),
                   );
                   // If a flight was successfully added, refresh the list
                   if (result == true) {
@@ -95,12 +98,16 @@ class _HomePageState extends State<HomePage> {
                     await AuthService.signOut();
                     if (context.mounted) {
                       Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => const AuthScreen()),
+                        MaterialPageRoute(
+                          builder: (context) => const AuthScreen(),
+                        ),
                       );
                     }
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Error signing out: $e')),
+                      const SnackBar(
+                        content: Text('Failed to sign out. Please try again.'),
+                      ),
                     );
                   }
                   break;
@@ -131,7 +138,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
       body: _buildBody(),
@@ -159,10 +166,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             const Icon(Icons.error, size: 64, color: Colors.red),
             const SizedBox(height: 16),
-            Text(
-              'Error: $_errorMessage',
-              textAlign: TextAlign.center,
-            ),
+            Text('Error: $_errorMessage', textAlign: TextAlign.center),
             const SizedBox(height: 16),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -198,13 +202,29 @@ class _HomePageState extends State<HomePage> {
               child: ListView(
                 scrollDirection: Axis.vertical,
                 children: [
-                  const Text('Active Flights', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Active Flights',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 10),
-                  ..._activeFlights.map((flight) => FlightCard(flight: flight)),
+                  ..._activeFlights.map(
+                    (flight) => FlightCard(
+                      flight: flight,
+                      onFlightCompleted: () => _loadFlights(forceRefresh: true),
+                    ),
+                  ),
                   const SizedBox(height: 20),
-                  const Text('Completed Flights', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Completed Flights',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 10),
-                  ..._completedFlights.map((flight) => FlightCard(flight: flight)),
+                  ..._completedFlights.map(
+                    (flight) => FlightCard(
+                      flight: flight,
+                      onFlightCompleted: () => _loadFlights(forceRefresh: true),
+                    ),
+                  ),
                 ],
               ),
             ),

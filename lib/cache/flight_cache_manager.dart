@@ -20,7 +20,7 @@ class FlightCacheManager {
   Future<List<Flight>> getFlights() async {
     if (isCacheValid) {
       return _cachedFlights!;
-    } 
+    }
 
     try {
       final flightService = FlightService();
@@ -29,7 +29,7 @@ class FlightCacheManager {
       return _cachedFlights!;
     } catch (e) {
       // If Firebase is not initialized, return empty list and rethrow error
-      throw Exception('Failed to load flights: $e');
+      throw Exception('Unable to load flights. Please check your connection.');
     }
   }
 
@@ -39,7 +39,8 @@ class FlightCacheManager {
   }
 
   List<Flight> getActiveFlights() {
-    return _cachedFlights?.where((flight) => !flight.isCompleted).toList() ?? [];
+    return _cachedFlights?.where((flight) => !flight.isCompleted).toList() ??
+        [];
   }
 
   List<Flight> getCompletedFlights() {
